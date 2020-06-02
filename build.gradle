@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "io.github.jamsesso:json-logic-java:1.0.3"
+    implementation "commons-codec:commons-codec:1.14"
 }
 
 compileKotlin {
