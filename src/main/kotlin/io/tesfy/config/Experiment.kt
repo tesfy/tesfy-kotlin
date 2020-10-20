@@ -4,5 +4,5 @@ data class Experiment(
     val id: String,
     val percentage: Double,
     val variations: List<Variation>,
-    val audience: Map.Entry<String, Any>
+    val audience: Map<String, String>
 )

@@ -1,11 +1,13 @@
 package io.tesfy.config
 
+import kotlin.math.floor
+
 class Config(
     private val datafile: Datafile,
     private val maxBuckets: Int
 ) {
 
-    private fun computeRangeEnd(percentage: Double): Double = (this.maxBuckets * percentage) / 100
+    private fun computeRangeEnd(percentage: Double): Double = floor((this.maxBuckets * percentage) / 100)
 
     fun getExperiments(): Map<String, Experiment> = this.datafile.experiments
 
@@ -27,10 +29,17 @@ class Config(
         var acc = 0.0
 
         return experiment.variations.map { variation ->
-            acc += variation.percentage / 100
+            acc += variation.percentage
             val rangeEnd = acc * computeRangeEnd(experiment.percentage)
 
-            Allocation(id, rangeEnd)
+            Allocation(variation.id, rangeEnd)
         }
+    }
+
+    fun getExperimentAllocation(experimentId: String): Allocation? {
+        val experiment = getExperiment(experimentId) ?: return null
+        val rangeEnd = computeRangeEnd(experiment.percentage)
+
+        return Allocation(experimentId, rangeEnd)
     }
 }
