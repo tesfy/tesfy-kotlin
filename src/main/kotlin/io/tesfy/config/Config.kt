@@ -7,7 +7,7 @@ class Config(
     private val maxBuckets: Int
 ) {
 
-    private fun computeRangeEnd(percentage: Double): Double = floor((this.maxBuckets * percentage) / 100)
+    private fun computeRangeEnd(percentage: Int): Long = floor((this.maxBuckets * percentage).toDouble() / 100).toLong()
 
     fun getExperiments(): Map<String, Experiment> = this.datafile.experiments
 
@@ -26,11 +26,11 @@ class Config(
 
     fun getExperimentAllocations(id: String): List<Allocation> {
         val experiment = this.getExperiment(id) ?: return emptyList()
-        var acc = 0.0
+        var acc = 0
 
         return experiment.variations.map { variation ->
             acc += variation.percentage
-            val rangeEnd = acc * computeRangeEnd(experiment.percentage)
+            val rangeEnd = computeRangeEnd(acc)
 
             Allocation(variation.id, rangeEnd)
         }
@@ -40,6 +40,6 @@ class Config(
         val experiment = getExperiment(experimentId) ?: return null
         val rangeEnd = computeRangeEnd(experiment.percentage)
 
-        return Allocation(experimentId, rangeEnd)
+        return Allocation(experiment.id, rangeEnd)
     }
 }

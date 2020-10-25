@@ -70,7 +70,7 @@ class Engine(
     }
 
     companion object {
-        val TOTAL_BUCKETS = 10000
-        val TRAFFIC_ALLOCATION_SALT = "tas"
+        const val TOTAL_BUCKETS = 10000
+        const val TRAFFIC_ALLOCATION_SALT = "tas"
     }
 }

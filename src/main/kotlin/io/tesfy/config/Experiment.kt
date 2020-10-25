@@ -2,7 +2,8 @@ package io.tesfy.config
 
 data class Experiment(
     val id: String,
-    val percentage: Double,
+    val percentage: Int,
     val variations: List<Variation>,
-    val audience: Map<String, String>
+    val audience: Any
 )
+
