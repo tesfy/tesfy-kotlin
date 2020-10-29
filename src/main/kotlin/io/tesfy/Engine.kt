@@ -8,7 +8,7 @@ class Engine(
     datafile: Datafile,
     var userId: String?,
     var attributes: Map<String, Any>,
-    private val storage: Storage<String>,
+    private val storage: Storage<String>?,
     _cache: Map<String, String> = emptyMap()
 ) {
 
@@ -24,9 +24,9 @@ class Engine(
     fun getVariationId(
         experimentId: String,
         userId: String?,
-        attributes: Map<String, Any>?
+        attributes: Map<String, Any>? = null
     ): String? {
-        var variationId: String? = getStaticVariation(experimentId) ?: storage.get(experimentId)
+        var variationId: String? = getStaticVariation(experimentId) ?: storage?.get(experimentId)
 
         if (variationId != null) {
             return variationId
@@ -50,7 +50,7 @@ class Engine(
         variationId = bucketer.bucket(key, allocations)
 
         if (variationId != null) {
-            storage.store(experimentId, variationId)
+            storage?.store(experimentId, variationId)
             return variationId
         }
 
@@ -65,7 +65,7 @@ class Engine(
 
     fun getVariationIds(
             userId: String,
-            attributes: Map<String, Any>
+            attributes: Map<String, Any>? = null
     ): Map<String, String?> {
         val experiments = config.getExperiments()
 
@@ -77,7 +77,7 @@ class Engine(
     fun isFeatureEnabled(
         featureId: String,
         userId: String?,
-        attributes: Map<String, Any>?
+        attributes: Map<String, Any>? = null
     ) : Boolean? {
         val feature = config.getFeature(featureId) ?: return null
         val key = computeKey(featureId, userId)
@@ -93,7 +93,7 @@ class Engine(
 
     fun getEnabledFeatures(
         userId: String?,
-        attributes: Map<String, Any>?
+        attributes: Map<String, Any>? = null
     ): Map<String, Boolean?> {
         val features = config.getFeatures()
 
