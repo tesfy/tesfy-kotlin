@@ -6,6 +6,7 @@ import io.tesfy.Engine
 import io.tesfy.Storage
 import io.tesfy.config.Datafile
 import io.tesfy.config.Experiment
+import io.tesfy.config.Feature
 import io.tesfy.config.Variation
 
 private class StorageImpl : Storage<String> {
@@ -122,7 +123,107 @@ class ITestEngine : WordSpec({
         }
     }
 
-    "test getVariationIds " should {
+    "isFeatureEnabled" should {
+        lateinit var engine: Engine
+        val datafile = Datafile(
+            mapOf(),
+            mapOf(
+                "feature-1" to Feature(
+                    "feature-1",
+                    50,
+                    mapOf(
+                        "==" to listOf(mapOf(
+                            "var" to "countryCode"
+                        ), "nl")
+                    )
+                ),
+                "feature-2" to Feature(
+                    "feature-2",
+                    50,
+                    mapOf(
+                        "==" to listOf(mapOf(
+                            "var" to "countryCode"
+                        ), "us")
+                    )
+                )
+            )
+        )
+        val userIdTest = "4qz936x2-62exacbc"
+
+        beforeEach {
+            engine = Engine(datafile, null, emptyMap(), StorageImpl())
+        }
+
+        "get an enabled feature" {
+            val attributes = mapOf("countryCode" to "nl")
+            val isFeatureEnabled = engine.isFeatureEnabled("feature-1", userIdTest, attributes)
+            isFeatureEnabled shouldBe true
+        }
+
+        "get a disabled feature" {
+            val attributes = mapOf("countryCode" to "us")
+            val isFeatureEnabled = engine.isFeatureEnabled("feature-2", userIdTest, attributes)
+            isFeatureEnabled shouldBe false
+        }
+
+        "return null if the feature does not exist" {
+            engine.isFeatureEnabled("asd", userIdTest, emptyMap()) shouldBe null
+        }
+
+        "return null if the attribute does not match" {
+            engine.isFeatureEnabled("feature-1", userIdTest, emptyMap()) shouldBe null
+        }
+    }
+
+    "getEnabledFeatures" should {
+        lateinit var engine: Engine
+        val datafile = Datafile(
+            mapOf(),
+            mapOf(
+                "feature-1" to Feature(
+                    "feature-1",
+                    50,
+                    mapOf(
+                        "==" to listOf(mapOf(
+                            "var" to "countryCode"
+                        ), "nl")
+                    )
+                ),
+                "feature-2" to Feature(
+                    "feature-2",
+                    50,
+                    mapOf(
+                        "==" to listOf(mapOf(
+                            "var" to "countryCode",
+                            "var" to "secondCountry"
+                        ), "us")
+                    )
+                ),
+                "feature-3" to Feature(
+                    "feature-3",
+                    50,
+                    mapOf(
+                        "==" to listOf(mapOf(
+                            "var" to "countryCode"
+                        ), "xx")
+                    )
+                )
+            )
+        )
+        val userIdTest = "4qz936x2-62exacbc"
+
+        beforeEach {
+            engine = Engine(datafile, null, emptyMap(), StorageImpl())
+        }
+
+        "get a set of features" {
+            val attributes = mapOf("countryCode" to "nl", "secondCountry" to "us")
+            val enabledFeatures = engine.getEnabledFeatures(userIdTest, attributes)
+            enabledFeatures shouldBe mapOf("feature-1" to true, "feature-2" to false, "feature-3" to null)
+        }
+    }
+
+    "getVariationIds" should {
         val datafile = Datafile(
             mapOf(
                 "experiment-1" to Experiment(
@@ -174,6 +275,16 @@ class ITestEngine : WordSpec({
         "get the variation id from 2 different experiments" {
             val variationIds = engine.getVariationIds(userId, attributes)
             variationIds shouldBe mapOf("experiment-1" to "0", "experiment-2" to "1")
+        }
+    }
+
+    "setForcedVariation" should {
+        val datafile = Datafile(emptyMap(), emptyMap())
+        val engine = Engine(datafile, null, emptyMap(), StorageImpl())
+
+        "set a variation in cache sucessfully" {
+            engine.setForcedVariation("exp-23-06-1991",  "variation-sth")
+            engine.cache["exp-23-06-1991"] shouldBe "variation-sth"
         }
     }
 })

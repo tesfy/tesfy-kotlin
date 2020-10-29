@@ -6,20 +6,25 @@ import io.tesfy.config.Experiment
 
 class Engine(
     datafile: Datafile,
-    private val userId: String?,
-    private val attributes: Map<String, String>,
+    var userId: String?,
+    var attributes: Map<String, Any>,
     private val storage: Storage<String>,
-    private val cache: Map<String, String> = emptyMap()
+    _cache: Map<String, String> = emptyMap()
 ) {
 
     private val config: Config = Config(datafile, TOTAL_BUCKETS)
     private val bucketer: Bucketer = Bucketer(TOTAL_BUCKETS)
     private val audienceEvaluator: AudienceEvaluator = AudienceEvaluator()
+    val cache: MutableMap<String, String> = _cache.toMutableMap()
+
+    fun setForcedVariation(experimentId: String, variationId: String) {
+        cache[experimentId] = variationId
+    }
 
     fun getVariationId(
         experimentId: String,
         userId: String?,
-        attributes: Map<String, String>?
+        attributes: Map<String, Any>?
     ): String? {
         var variationId: String? = getStaticVariation(experimentId) ?: storage.get(experimentId)
 
@@ -60,12 +65,40 @@ class Engine(
 
     fun getVariationIds(
             userId: String,
-            attributes: Map<String, String>
+            attributes: Map<String, Any>
     ): Map<String, String?> {
         val experiments = config.getExperiments()
 
         return experiments.keys.map {
                 experimentId -> experimentId to getVariationId(experimentId, userId, attributes)
+        }.toMap()
+    }
+
+    fun isFeatureEnabled(
+        featureId: String,
+        userId: String?,
+        attributes: Map<String, Any>?
+    ) : Boolean? {
+        val feature = config.getFeature(featureId) ?: return null
+        val key = computeKey(featureId, userId)
+        val audience = feature.audience
+        val allocation = config.getFeatureAllocation(featureId)
+
+        if (allocation == null || !audienceEvaluator.evaluate(audience, attributes ?: this.attributes)) {
+            return null
+        }
+
+        return bucketer.bucket(key, listOf(allocation))?.isNotEmpty() ?: false
+    }
+
+    fun getEnabledFeatures(
+        userId: String?,
+        attributes: Map<String, Any>?
+    ): Map<String, Boolean?> {
+        val features = config.getFeatures()
+
+        return features.keys.map {
+            it to isFeatureEnabled(it, userId, attributes)
         }.toMap()
     }
 

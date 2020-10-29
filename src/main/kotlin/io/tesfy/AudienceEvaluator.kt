@@ -8,7 +8,7 @@ class AudienceEvaluator {
     private val jsonLogic: JsonLogic = JsonLogic()
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
-    fun evaluate(audience: Any, attributes: Map<String, String>): Boolean {
+    fun evaluate(audience: Any, attributes: Map<String, Any>): Boolean {
         val jsonLogicString = processAudience(audience)
         return jsonLogic.apply(jsonLogicString, attributes) as Boolean
     }
