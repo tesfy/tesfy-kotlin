@@ -16,7 +16,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-core:2.11.3"
     implementation "io.github.jamsesso:json-logic-java:1.0.5"
     implementation "commons-codec:commons-codec:1.14"
-    testImplementation "org.junit.platform:junit-platform-runner"
+    testImplementation "org.junit.platform:junit-platform-runner:1.7.0"
     testImplementation 'io.kotest:kotest-runner-junit5:4.3.0' // for kotest framework
     testImplementation 'io.kotest:kotest-assertions-core:4.3.0' // for kotest core jvm assertions
 }
@@ -29,5 +29,19 @@ compileTestKotlin {
 }
 
 test {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching("io.tesfy.unit.*")
+    }
+}
+
+task itest(type: Test) {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching "io.tesfy.itest.*"
+    }
+}
+
+task testAll(type: Test) {
     useJUnitPlatform()
 }
