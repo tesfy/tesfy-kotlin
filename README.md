@@ -20,8 +20,9 @@
 ## Usage
 
 ### Installation
+#### Gradle
 ```
-
+implementation("io.tesfy:tesfy-kotlin:1.0")
 ```
 
 ### Initialization
@@ -130,6 +131,11 @@ val storage: Storage = StorageImpl()
 
 val variationId = engine.getVariationId("experiment-1", userId, attributes, storage) //  "0"
 ```
+
+### Considerations
+
+This version of the library is using Unsigned Integers from Kotlin and currently is in Beta,
+for more information please read the [following link](https://kotlinlang.org/docs/reference/basic-types.html#beta-status-of-unsigned-integers).
 
 ## Feedback
 
