@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.tesfy"
-version = "1.0"
+version = "1.0.0"
 
 extra["isReleaseVersion"] = !version.toString().contains("SNAPSHOT")
 
@@ -113,7 +113,7 @@ publishing {
             }
 
             artifactId = "tesfy-kotlin"
-            version = "1.0"
+            version = "1.0.0"
 
             from(components["java"])
         }

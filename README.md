@@ -13,7 +13,7 @@
     <a href="https://github.com/tesfy/tesfy-kotlin/actions">    
         <img alt="tests badge" src="https://github.com/tesfy/tesfy-kotlin/workflows/CI/badge.svg">   
     </a>
-    <a href="https://search.maven.org/artifact/io.tesfy/tesfy-kotlin/1.0/jar">    
+    <a href="https://search.maven.org/artifact/io.tesfy/tesfy-kotlin/1.0.0/jar">    
         <img alt="maven central" src="https://maven-badges.herokuapp.com/maven-central/io.tesfy/tesfy-kotlin/badge.svg">
     </a>
 </div>
@@ -31,7 +31,7 @@
 ### Installation
 #### Gradle
 ```
-implementation("io.tesfy:tesfy-kotlin:1.0")
+implementation("io.tesfy:tesfy-kotlin")
 ```
 
 ### Initialization
