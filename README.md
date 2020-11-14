@@ -1,13 +1,22 @@
-# Tesfy-Kotlin
+<div align="center">
+  <img alt="logo" src="https://tesfy.s3.us-west-2.amazonaws.com/images/logo.png" width="220">
+</div>
 
 <p align="center">
   A lightweight A/B Testing and Feature Flag Kotlin library focused on performance ⚡️
 </p>
 
-<p align="center">
-  <img alt="license badge" src="https://img.shields.io/badge/license-MIT-blue.svg">
-  <img alt="tests badge" src="https://github.com/tesfy/tesfy-kotlin/workflows/main/badge.svg">
-</p>
+<div align="center">
+    <a href="https://github.com/tesfy/tesfy-kotlin/blob/master/LICENSE">    
+        <img alt="license badge" src="https://img.shields.io/badge/license-MIT-blue.svg">    
+    </a>
+    <a href="https://github.com/tesfy/tesfy-kotlin/actions">    
+        <img alt="tests badge" src="https://github.com/tesfy/tesfy-kotlin/workflows/CI/badge.svg">   
+    </a>
+    <a href="https://search.maven.org/artifact/io.tesfy/tesfy-kotlin/1.0/jar">    
+        <img alt="maven central" src="https://maven-badges.herokuapp.com/maven-central/io.tesfy/tesfy-kotlin/badge.svg">
+    </a>
+</div>
 
 [Tesfy](https://github.com/andresz1/tesfy) provides a simple but complete solution to develop A/B Tests and Feature Flags on both server and client side without relying in any storage layer. The main features of this library are:
 - Lightweight and focused on performance

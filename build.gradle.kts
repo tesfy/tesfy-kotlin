@@ -78,8 +78,8 @@ publishing {
             name = "deploy"
             url = if (project.extra["isReleaseVersion"] as Boolean) releasesRepoUrl else snapshotsRepoUrl
             credentials {
-                username = project.properties["nexusUsername"] as String
-                password = project.properties["nexusPassword"] as String
+                username = project.properties["nexusUsername"]?.toString() ?: ""
+                password = project.properties["nexusPassword"]?.toString() ?: ""
             }
         }
     }
